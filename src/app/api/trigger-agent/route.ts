@@ -5,7 +5,7 @@ import { runEmettAgent } from "@/lib/agents/emett-agent";
 interface TriggerAgentRequest {
   campaignId: string;
   competitor: string;
-  painPoints: string[];
+  painPoints?: string;
 }
 
 export async function POST(request: Request) {
@@ -14,12 +14,5 @@ export async function POST(request: Request) {
 
   void runEmettAgent(campaignId, competitor, painPoints);
 
-  return NextResponse.json(
-    {
-      success: true,
-      message: "Emett agent trigger acknowledged.",
-      campaignId
-    },
-    { status: 200 }
-  );
+  return NextResponse.json({ success: true });
 }

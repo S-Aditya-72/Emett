@@ -1,12 +1,14 @@
 import type { AccountSignal, Campaign } from "@/types";
 import {
   addDoc,
+  Timestamp,
   collection,
   getDocs,
   onSnapshot,
   orderBy,
   query,
-  serverTimestamp
+  serverTimestamp,
+  where
 } from "firebase/firestore";
 
 import { db } from "./config";
@@ -59,40 +61,47 @@ export async function getCampaigns(): Promise<Campaign[]> {
   }
 }
 
-export async function saveAccountSignal(signal: AccountSignal): Promise<void> {
-  void signal;
+interface SaveAccountSignalInput extends Omit<AccountSignal, "id" | "timestamp"> {
+  timestamp?: string;
+}
+
+export async function saveAccountSignal(signal: SaveAccountSignalInput): Promise<void> {
+  try {
+    await addDoc(collection(db, "account_signals"), {
+      ...signal,
+      timestamp: serverTimestamp()
+    });
+  } catch (error) {
+    console.error("Failed to save account signal:", error);
+    throw error;
+  }
 }
 
 export function subscribeToCampaignSignals(
   campaignId: string,
   callback: (signals: AccountSignal[]) => void
 ): () => void {
-  const q = query(
-    collection(db, "accountSignals"),
-    orderBy("timestamp", "desc")
-  );
+  const q = query(collection(db, "account_signals"), where("campaignId", "==", campaignId), orderBy("timestamp", "desc"));
 
   const unsubscribe = onSnapshot(
     q,
     (snapshot) => {
-      const signals = snapshot.docs
-        .map((doc) => {
-          const data = doc.data() as Partial<AccountSignal>;
-          return {
-            id: doc.id,
-            campaignId: data.campaignId ?? "",
-            accountId: data.accountId ?? "",
-            companyName: data.companyName ?? "",
-            intentSignal: data.intentSignal ?? "",
-            sourceType: data.sourceType ?? "",
-            confidenceScore: data.confidenceScore ?? 0,
-            identifiedDecisionMakers: data.identifiedDecisionMakers ?? [],
-            recommendedAction: data.recommendedAction ?? "",
-            draftedEmail: data.draftedEmail ?? "",
-            timestamp: data.timestamp ?? ""
-          } as AccountSignal;
-        })
-        .filter((signal) => signal.campaignId === campaignId);
+      const signals = snapshot.docs.map((doc) => {
+        const data = doc.data() as Partial<AccountSignal> & { timestamp?: Timestamp };
+        return {
+          id: doc.id,
+          campaignId: data.campaignId ?? "",
+          accountId: data.accountId ?? "",
+          companyName: data.companyName ?? "",
+          intentSignal: data.intentSignal ?? "",
+          sourceType: data.sourceType ?? "",
+          confidenceScore: data.confidenceScore ?? 0,
+          identifiedDecisionMakers: data.identifiedDecisionMakers ?? [],
+          recommendedAction: data.recommendedAction ?? "",
+          draftedEmail: data.draftedEmail ?? "",
+          timestamp: data.timestamp?.toDate?.()?.toISOString() ?? new Date(0).toISOString()
+        } as AccountSignal;
+      });
 
       callback(signals);
     },
