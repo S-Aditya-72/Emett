@@ -1,7 +1,7 @@
 export interface Campaign {
   id: string;
   targetCompetitor: string;
-  painPoints: string[];
+  painPoints?: string;
   createdAt: string;
 }
 
