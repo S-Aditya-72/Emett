@@ -88,7 +88,7 @@ export function AccountSignalCard({ signal }: AccountSignalCardProps) {
         onClick={handleCopyAndOpenGmail}
         className="inline-flex w-full items-center justify-center rounded-md bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
       >
-        Copy Draft & Open Gmail
+        Email
       </button>
     </article>
   );
