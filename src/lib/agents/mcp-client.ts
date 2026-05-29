@@ -44,7 +44,7 @@ export const BrightDataCompanyEnrichmentTool = new DynamicTool({
     const query = input.trim();
 
     try {
-      const linkedInQuery = `site:linkedin.com/in "Engineering" OR "CTO" "${query}"`;
+      const linkedInQuery = `site:linkedin.com/in "Engineering" OR "CTO" "${query}" "Present"`;
       const response = await fetch("https://api.brightdata.com/request", {
         method: "POST",
         headers: {

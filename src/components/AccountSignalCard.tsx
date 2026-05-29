@@ -7,7 +7,7 @@ interface AccountSignalCardProps {
 }
 
 export function AccountSignalCard({ signal }: AccountSignalCardProps) {
-  const recipientEmail = "prospect@example.com";
+  const recipientEmail = signal.prospectEmail?.trim() ?? "";
 
   async function handleCopyAndOpenGmail() {
     const subject = encodeURIComponent(`Quick note for ${signal.companyName}`);
@@ -19,7 +19,11 @@ export function AccountSignalCard({ signal }: AccountSignalCardProps) {
       console.error("Failed to copy drafted email:", error);
     }
 
-    window.open(`mailto:${recipientEmail}?subject=${subject}&body=${body}`, "_blank");
+    const mailto = recipientEmail
+      ? `mailto:${recipientEmail}?subject=${subject}&body=${body}`
+      : `mailto:?subject=${subject}&body=${body}`;
+
+    window.open(mailto, "_blank");
   }
 
   return (
@@ -53,15 +57,23 @@ export function AccountSignalCard({ signal }: AccountSignalCardProps) {
             {signal.identifiedDecisionMakers.map((maker) => (
               <li
                 key={`${maker.name}-${maker.role}`}
-                className="flex items-center gap-2 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2"
+                className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2"
               >
-                <span className="font-semibold text-slate-900">{maker.name}</span>
-                <span className="text-slate-400">—</span>
-                <span className="text-sm text-slate-600">{maker.role}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-semibold text-slate-900">{maker.name}</span>
+                  <span className="text-slate-400">—</span>
+                  <span className="text-sm text-slate-600">{maker.role}</span>
+                </div>
+                {recipientEmail ? (
+                  <p className="mt-1 text-xs text-blue-700">{recipientEmail}</p>
+                ) : null}
               </li>
             ))}
           </ul>
         )}
+        {signal.identifiedDecisionMakers.length === 0 && recipientEmail ? (
+          <p className="mt-2 text-xs text-blue-700">{recipientEmail}</p>
+        ) : null}
       </div>
 
       <div className="mb-5">

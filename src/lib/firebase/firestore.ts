@@ -110,6 +110,7 @@ export function subscribeToCampaignSignals(
           identifiedDecisionMakers: data.identifiedDecisionMakers ?? [],
           recommendedAction: data.recommendedAction ?? "",
           draftedEmail: data.draftedEmail ?? "",
+          prospectEmail: data.prospectEmail ?? "",
           timestamp: data.timestamp?.toDate?.()?.toISOString() ?? new Date(0).toISOString()
         } as AccountSignal;
       });

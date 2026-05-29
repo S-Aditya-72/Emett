@@ -164,10 +164,11 @@ RULES:
 - Reference the historical memory and today's pain with ${competitor}.
 - Explicitly map their pain to our features (${ourProductDescription}) to prove WHY ${ourProduct} is the exact cure.
 - Max 3 sentences. Tone: direct, confident.
+- Guess the prospect's corporate email address (e.g., first.last@company.com or first@company.com). Output valid JSON containing the new key 'prospectEmail' alongside the other keys.
 - Output valid JSON matching the AccountSignal type (omit id and timestamp).
 CRITICAL JSON MAPPING: 'companyName' MUST be the name of the prospective third-party customer experiencing the pain. It MUST NOT be ${competitor}.
-Required fields: campaignId, accountId, companyName, intentSignal, sourceType, confidenceScore, identifiedDecisionMakers (array of { name, role, linkedInUrl }), recommendedAction, draftedEmail.
-Use campaignId: "${campaignId}". Ensure identifiedDecisionMakers includes ${realDecisionMakerName}.
+Required fields: campaignId, accountId, companyName, intentSignal, sourceType, confidenceScore, identifiedDecisionMakers (array of { name, role, linkedInUrl }), recommendedAction, draftedEmail, prospectEmail.
+Use campaignId: "${campaignId}". Ensure identifiedDecisionMakers includes ${realDecisionMakerName}. The prospectEmail must be addressed to ${realDecisionMakerName} at ${companyName}.
 ${RAW_JSON_INSTRUCTION}`;
 
     const draftResponse = await llm.invoke([new HumanMessage(draftPrompt)]);
@@ -180,7 +181,8 @@ ${RAW_JSON_INSTRUCTION}`;
       companyName: signal.companyName || companyName,
       competitorUsed: competitor,
       accountId: signal.accountId || companyName.toLowerCase().replace(/\s+/g, "-"),
-      intentSignal: signal.intentSignal || currentPainPoint
+      intentSignal: signal.intentSignal || currentPainPoint,
+      prospectEmail: signal.prospectEmail ?? ""
     };
 
     console.log("[Emett] Storing Cognee memory...");

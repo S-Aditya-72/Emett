@@ -25,5 +25,6 @@ export interface AccountSignal {
   identifiedDecisionMakers: DecisionMaker[];
   recommendedAction: string;
   draftedEmail: string;
+  prospectEmail: string;
   timestamp: string;
 }
