@@ -6,7 +6,10 @@ export function getLLM() {
   }
 
   return new ChatOpenAI({
-    modelName: "gpt-4o-mini",
-    temperature: 0.2
+    modelName: "gpt-4o", // Change to gpt-4o (sometimes aimlapi doesn't support the 'mini' alias)
+    temperature: 0.2,
+    configuration: {
+      baseURL: process.env.OPENAI_BASE_URL,
+    }
   });
 }
