@@ -22,17 +22,14 @@ export const BrightDataSERPTool = new DynamicTool({
           zone: "serp_api2",
           url: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
           format: "raw"
-        })
+        }),
+        cache: "no-store"
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("search_web_signals Bright Data API error:", response.status, errorText);
-        return `SERP tool error: Bright Data request failed with status ${response.status}.`;
-      }
+      if (!response.ok) throw new Error(`BrightData API Error: ${response.statusText}`);
 
       const data = await response.text();
-      return data;
+      return data.substring(0, 8000);
     } catch (error) {
       console.error("search_web_signals failed:", error);
       return "SERP tool error: unable to fetch live search results.";
@@ -40,6 +37,39 @@ export const BrightDataSERPTool = new DynamicTool({
   }
 });
 
+export const BrightDataCompanyEnrichmentTool = new DynamicTool({
+  name: "enrich_target_company",
+  description: "Use this to find the real name and role of a decision-maker at a target company.",
+  func: async (input: string) => {
+    const query = input.trim();
+
+    try {
+      const linkedInQuery = `site:linkedin.com/in "Engineering" OR "CTO" "${query}"`;
+      const response = await fetch("https://api.brightdata.com/request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.BRIGHT_DATA_BEARER_TOKEN}`
+        },
+        body: JSON.stringify({
+          zone: "serp_api2",
+          url: `https://www.google.com/search?q=${encodeURIComponent(linkedInQuery)}`,
+          format: "raw"
+        }),
+        cache: "no-store"
+      });
+
+      if (!response.ok) throw new Error(`BrightData API Error: ${response.statusText}`);
+
+      const data = await response.text();
+      return data.substring(0, 4000);
+    } catch (error) {
+      console.error("enrich_target_company failed:", error);
+      return "Enrichment tool error: unable to fetch LinkedIn profile search results.";
+    }
+  }
+});
+
 export function getBrightDataTools() {
-  return [BrightDataSERPTool];
+  return [BrightDataSERPTool, BrightDataCompanyEnrichmentTool];
 }

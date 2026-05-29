@@ -15,16 +15,22 @@ import { db } from "./config";
 
 interface SaveCampaignInput {
   targetCompetitor: string;
+  ourProduct: string;
+  ourProductDescription: string;
   painPoints?: string;
 }
 
 export async function saveCampaign({
   targetCompetitor,
+  ourProduct,
+  ourProductDescription,
   painPoints
 }: SaveCampaignInput): Promise<string> {
   try {
     const docRef = await addDoc(collection(db, "campaigns"), {
       targetCompetitor,
+      ourProduct: ourProduct.trim(),
+      ourProductDescription: ourProductDescription.trim(),
       painPoints: painPoints?.trim() ? painPoints.trim() : "",
       createdAt: serverTimestamp()
     });
@@ -44,6 +50,8 @@ export async function getCampaigns(): Promise<Campaign[]> {
     return snapshot.docs.map((doc) => {
       const data = doc.data() as {
         targetCompetitor?: string;
+        ourProduct?: string;
+        ourProductDescription?: string;
         painPoints?: string;
         createdAt?: { toDate?: () => Date };
       };
@@ -51,6 +59,8 @@ export async function getCampaigns(): Promise<Campaign[]> {
       return {
         id: doc.id,
         targetCompetitor: data.targetCompetitor ?? "",
+        ourProduct: data.ourProduct ?? "",
+        ourProductDescription: data.ourProductDescription ?? "",
         painPoints: data.painPoints ?? "",
         createdAt: data.createdAt?.toDate?.()?.toISOString() ?? new Date(0).toISOString()
       };
@@ -93,6 +103,7 @@ export function subscribeToCampaignSignals(
           campaignId: data.campaignId ?? "",
           accountId: data.accountId ?? "",
           companyName: data.companyName ?? "",
+          competitorUsed: data.competitorUsed,
           intentSignal: data.intentSignal ?? "",
           sourceType: data.sourceType ?? "",
           confidenceScore: data.confidenceScore ?? 0,

@@ -18,6 +18,8 @@ export default function CampaignDetailsPage({ params }: CampaignDetailsPageProps
   const [signals, setSignals] = useState<AccountSignal[]>([]);
   const [isAgentRunning, setIsAgentRunning] = useState(false);
   const [targetCompetitor, setTargetCompetitor] = useState("");
+  const [ourProduct, setOurProduct] = useState("");
+  const [ourProductDescription, setOurProductDescription] = useState("");
   const [painPoints, setPainPoints] = useState("");
 
   useEffect(() => {
@@ -33,8 +35,15 @@ export default function CampaignDetailsPage({ params }: CampaignDetailsPageProps
       try {
         const campaignRef = doc(db, "campaigns", params.campaignId);
         const snapshot = await getDoc(campaignRef);
-        const data = snapshot.data() as { targetCompetitor?: string; painPoints?: string } | undefined;
+        const data = snapshot.data() as {
+          targetCompetitor?: string;
+          ourProduct?: string;
+          ourProductDescription?: string;
+          painPoints?: string;
+        } | undefined;
         setTargetCompetitor(data?.targetCompetitor ?? "");
+        setOurProduct(data?.ourProduct ?? "");
+        setOurProductDescription(data?.ourProductDescription ?? "");
         setPainPoints(data?.painPoints ?? "");
       } catch (error) {
         console.error("Failed to load campaign details:", error);
@@ -56,7 +65,9 @@ export default function CampaignDetailsPage({ params }: CampaignDetailsPageProps
         body: JSON.stringify({
           campaignId: params.campaignId,
           competitor: targetCompetitor,
-          painPoints
+          painPoints,
+          ourProduct,
+          ourProductDescription
         })
       });
     } catch (error) {

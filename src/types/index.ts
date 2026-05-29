@@ -1,6 +1,8 @@
 export interface Campaign {
   id: string;
   targetCompetitor: string;
+  ourProduct: string;
+  ourProductDescription: string;
   painPoints?: string;
   createdAt: string;
 }
@@ -16,6 +18,7 @@ export interface AccountSignal {
   campaignId: string;
   accountId: string;
   companyName: string;
+  competitorUsed?: string;
   intentSignal: string;
   sourceType: "Reddit" | "GitHub" | string;
   confidenceScore: number;

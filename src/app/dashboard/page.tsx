@@ -29,7 +29,8 @@ export default async function DashboardPage() {
               href={`/dashboard/${campaign.id}`}
               className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300 hover:shadow"
             >
-              <h2 className="text-lg font-semibold text-slate-900">{campaign.targetCompetitor}</h2>
+              <h2 className="text-lg font-semibold text-slate-900">{campaign.ourProduct}</h2>
+              <p className="mt-1 text-sm text-slate-500">vs {campaign.targetCompetitor}</p>
               <p className="mt-2 text-sm text-slate-600">
                 {campaign.painPoints || "All negative feedback"}
               </p>
