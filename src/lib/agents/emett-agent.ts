@@ -15,11 +15,48 @@ interface ScoutExtraction {
 }
 
 async function retrieveCogneeMemory(companyName: string): Promise<string> {
-  return `[Cognee Memory]: We previously detected that ${companyName} struggled with rigid vendor lock-in and high compute costs 2 weeks ago.`;
+  try {
+    const response = await fetch("http://127.0.0.1:8000/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ companyName })
+    });
+
+    const data = (await response.json()) as { memory?: string };
+
+    if (data.memory && data.memory.trim().length > 0) {
+      return `[Cognee Memory]: ${data.memory}`;
+    }
+
+    return "No historical memory found for this company.";
+  } catch (error) {
+    console.error("[Cognee] Failed to retrieve memory:", error);
+    return "No historical memory found for this company.";
+  }
 }
 
 async function storeCogneeMemory(companyName: string, signal: string): Promise<void> {
-  console.log(`[Cognee] Stored new memory for ${companyName}: ${signal}`);
+  try {
+    const response = await fetch("http://127.0.0.1:8000/remember", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ companyName, signal })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("[Cognee] Failed to store memory:", response.status, errorText);
+      return;
+    }
+
+    console.log(`[Cognee] Successfully stored memory for ${companyName}`);
+  } catch (error) {
+    console.error("[Cognee] Failed to store memory:", error);
+  }
 }
 
 function parseJsonFromLlmOutput<T>(text: string): T {
