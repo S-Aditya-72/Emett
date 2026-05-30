@@ -1,6 +1,8 @@
 "use client";
 
 import type { AccountSignal } from "@/types";
+import { deleteAccountSignal } from "@/lib/firebase/firestore";
+import { X } from "lucide-react";
 
 interface AccountSignalCardProps {
   signal: AccountSignal;
@@ -8,6 +10,14 @@ interface AccountSignalCardProps {
 
 export function AccountSignalCard({ signal }: AccountSignalCardProps) {
   const recipientEmail = signal.prospectEmail?.trim() ?? "";
+
+  async function handleDeleteSignal() {
+    try {
+      await deleteAccountSignal(signal.id);
+    } catch (error) {
+      console.error("Failed to delete account signal:", error);
+    }
+  }
 
   async function handleCopyAndOpenGmail() {
     const subject = encodeURIComponent(`Quick note for ${signal.companyName}`);
@@ -27,7 +37,15 @@ export function AccountSignalCard({ signal }: AccountSignalCardProps) {
   }
 
   return (
-    <article className="bg-white rounded-3xl p-6 shadow-lg border-l-4 border-[#247BA0]">
+    <article className="relative bg-white rounded-3xl p-6 shadow-lg border-l-4 border-[#247BA0]">
+      <button
+        type="button"
+        onClick={handleDeleteSignal}
+        className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-400 transition-colors hover:text-red-500"
+        aria-label="Delete signal"
+      >
+        <X className="h-5 w-5" />
+      </button>
       <div className="mb-5 flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl font-bold tracking-tight text-[#0A2463]">{signal.companyName}</h2>
@@ -36,9 +54,6 @@ export function AccountSignalCard({ signal }: AccountSignalCardProps) {
           </span>
           <p className="mt-2 text-xs font-medium uppercase tracking-wide text-[#605F5E]">Source: {signal.sourceType}</p>
         </div>
-        <span className="shrink-0 rounded-full bg-[#247BA0]/10 px-3 py-1 text-xs font-semibold text-[#247BA0]">
-          {Math.round(signal.confidenceScore)}% confidence
-        </span>
       </div>
 
       <div className="mb-4">

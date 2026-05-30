@@ -1,6 +1,8 @@
 import type { AccountSignal, Campaign } from "@/types";
 import {
   addDoc,
+  deleteDoc,
+  doc,
   Timestamp,
   collection,
   getDocs,
@@ -106,7 +108,6 @@ export function subscribeToCampaignSignals(
           competitorUsed: data.competitorUsed,
           intentSignal: data.intentSignal ?? "",
           sourceType: data.sourceType ?? "",
-          confidenceScore: data.confidenceScore ?? 0,
           identifiedDecisionMakers: data.identifiedDecisionMakers ?? [],
           recommendedAction: data.recommendedAction ?? "",
           draftedEmail: data.draftedEmail ?? "",
@@ -123,4 +124,22 @@ export function subscribeToCampaignSignals(
   );
 
   return unsubscribe;
+}
+
+export async function deleteCampaign(campaignId: string) {
+  try {
+    await deleteDoc(doc(db, "campaigns", campaignId));
+  } catch (error) {
+    console.error("Failed to delete campaign:", error);
+    throw error;
+  }
+}
+
+export async function deleteAccountSignal(signalId: string) {
+  try {
+    await deleteDoc(doc(db, "account_signals", signalId));
+  } catch (error) {
+    console.error("Failed to delete account signal:", error);
+    throw error;
+  }
 }

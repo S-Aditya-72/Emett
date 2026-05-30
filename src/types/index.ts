@@ -21,7 +21,6 @@ export interface AccountSignal {
   competitorUsed?: string;
   intentSignal: string;
   sourceType: "Reddit" | "GitHub" | string;
-  confidenceScore: number;
   identifiedDecisionMakers: DecisionMaker[];
   recommendedAction: string;
   draftedEmail: string;
