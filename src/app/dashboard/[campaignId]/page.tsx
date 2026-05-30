@@ -85,14 +85,14 @@ export default function CampaignDetailsPage({ params }: CampaignDetailsPageProps
     <main className="mx-auto max-w-6xl space-y-6 px-6 py-10">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Campaign Intelligence Feed</h1>
-          <p className="mt-1 text-sm text-slate-600">Campaign ID: {params.campaignId}</p>
+          <h1 className="text-2xl font-semibold text-[#0A2463]">Campaign Intelligence Feed</h1>
+          <p className="mt-1 text-sm text-[#605F5E]">Campaign ID: {params.campaignId}</p>
         </div>
         <button
           type="button"
           onClick={handleRunAgent}
           disabled={isAgentRunning}
-          className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center rounded-full bg-[#FB3640] px-5 py-2.5 text-sm font-medium text-white transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isAgentRunning ? "Running..." : "Run Emett Agent"}
         </button>
@@ -105,11 +105,11 @@ export default function CampaignDetailsPage({ params }: CampaignDetailsPageProps
       ) : null}
 
       {signals.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-600">
+        <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-[#605F5E] shadow-md">
           No account signals yet. Trigger the Emett agent to populate this feed.
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           {signals.map((signal) => (
             <AccountSignalCard key={signal.id} signal={signal} />
           ))}

@@ -38,7 +38,7 @@ export function CampaignForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <form onSubmit={handleSubmit} className="space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-md">
       <div className="grid gap-5 md:grid-cols-2">
         <div className="space-y-2 md:col-span-2">
           <label htmlFor="ourProduct" className="text-sm font-medium text-slate-700">
@@ -50,7 +50,7 @@ export function CampaignForm() {
             required
             value={ourProduct}
             onChange={(event) => setOurProduct(event.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="w-full rounded-2xl border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-[#247BA0] focus:ring-2 focus:ring-[#247BA0]/20"
             placeholder="e.g., Cloudflare Workers"
           />
         </div>
@@ -65,7 +65,7 @@ export function CampaignForm() {
             rows={3}
             value={ourProductDescription}
             onChange={(event) => setOurProductDescription(event.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="w-full rounded-2xl border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-[#247BA0] focus:ring-2 focus:ring-[#247BA0]/20"
             placeholder="e.g., Zero cold starts, global edge network, predictable flat-rate pricing."
           />
         </div>
@@ -80,7 +80,7 @@ export function CampaignForm() {
             required
             value={targetCompetitor}
             onChange={(event) => setTargetCompetitor(event.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="w-full rounded-2xl border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-[#247BA0] focus:ring-2 focus:ring-[#247BA0]/20"
             placeholder="e.g. Vercel"
           />
         </div>
@@ -94,16 +94,15 @@ export function CampaignForm() {
             type="text"
             value={painPoints}
             onChange={(event) => setPainPoints(event.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="w-full rounded-2xl border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-[#247BA0] focus:ring-2 focus:ring-[#247BA0]/20"
             placeholder="e.g. Cold starts, pricing (Leave blank to find all negative feedback)"
           />
         </div>
       </div>
-
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex items-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex items-center rounded-full bg-[#247BA0] px-6 py-2.5 text-sm font-medium text-white transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? "Creating..." : "Create Campaign"}
       </button>
