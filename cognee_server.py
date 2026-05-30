@@ -16,6 +16,8 @@ if base_url:
 os.environ["LLM_MODEL"] = "gpt-4o"
 os.environ["EMBEDDING_MODEL"] = "text-embedding-3-small"
 
+os.environ["COGNEE_SKIP_CONNECTION_TEST"] = "true" 
+
 import cognee
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
